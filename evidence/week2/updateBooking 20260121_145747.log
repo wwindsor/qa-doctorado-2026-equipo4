@@ -1,0 +1,19 @@
+================================================
+  Restful-Booker UpdateBooking Test
+  URL básica: http://localhost:3001
+  Marca de Tiempo: 2026-01-21 14:57:47
+  Archivo de Registro: evidence/week2/updateBooking 20260121_145747.log
+================================================
+
+----------Inicia a jecutar el test: UpdateBooking---------------
+✓ PASSED: UpdateBooking actualizó el nombre correctamente para el ID 51
+
+================================================
+  Resumen de Pruebas
+================================================
+Pasaron: 1
+Fallaron: 0
+
+El test pasó!
+
+La evidencia se guardó en: evidence/week2/updateBooking 20260121_145747.log

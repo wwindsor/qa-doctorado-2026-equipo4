@@ -1,0 +1,20 @@
+================================================
+  Restful-Booker GetBookingById Test
+  URL básica: http://localhost:3001
+  Marca de Tiempo: 2026-01-21 12:23:06
+  Archivo de Registro: evidence/week2/getBookingById 20260121_122306.log
+================================================
+
+----------Inicia a jecutar el test: GetBookingById---------------
+✓ PASSED: GetBooking devolvió el ID de reserva 51 exitosamente
+✓ PASSED: GetBooking devolvió datos de la reserva {"firstname":"Grupo-4","lastname":"Grupo-4","totalprice":112,"depositpaid":true,"bookingdates":{"checkin":"2017-12-31","checkout":"2018-12-31"}} exitosamente
+
+================================================
+  Resumen de Pruebas
+================================================
+Pasaron: 1
+Fallaron: 0
+
+El test pasó!
+
+La evidencia se guardó en: evidence/week2/getBookingById 20260121_122306.log
