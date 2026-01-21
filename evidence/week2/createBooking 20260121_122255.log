@@ -1,0 +1,20 @@
+================================================
+  Restful-Booker CreateBooking Test
+  URL básica: http://localhost:3001
+  Marca de Tiempo: 2026-01-21 12:22:55
+  Archivo de Registro: evidence/week2/createBooking 20260121_122255.log
+================================================
+
+----------Inicia a jecutar el test: CreateBooking---------------
+✓ PASSED: CreateBooking creado exitosamente con el ID 62
+✓ PASSED: CreateBooking creado exitosamente con datos  {"firstname":"Grupo-4","lastname":"Grupo-4","totalprice":112,"depositpaid":true,"bookingdates":{"checkin":"2017-12-30","checkout":"2018-12-30"}}
+
+================================================
+  Resumen de Pruebas
+================================================
+Pasaron: 1
+Fallaron: 0
+
+El test pasó!
+
+La evidencia se guardó en: evidence/week2/createBooking 20260121_122255.log

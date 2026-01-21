@@ -1,0 +1,19 @@
+================================================
+  Restful-Booker DeleteBooking Test
+  URL básica: http://localhost:3001
+  Marca de Tiempo: 2026-01-21 12:22:58
+  Archivo de Registro: evidence/week2/deleteBooking 20260121_122258.log
+================================================
+
+----------Inicia a jecutar el test: DeleteBooking---------------
+✓ PASSED: DeleteBooking eliminó correctamente la reserva con ID 60
+
+================================================
+  Resumen de Pruebas
+================================================
+Pasaron: 1
+Fallaron: 0
+
+El test pasó!
+
+La evidencia se guardó en: evidence/week2/deleteBooking 20260121_122258.log

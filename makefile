@@ -21,6 +21,16 @@ help:
 	@echo "  make status    Muestra estado de contenedores (si existe docker compose)"
 	@echo "  make logs      Muestra logs (si existe docker compose)"
 	@echo "  make perm      Asigna permisos de ejecucion a los scripts"
+	@echo ""
+	@echo "Escenarios de Calidad  - Semana 2:"
+	@echo "  Q1-CreateBooking  - Escenario Q1: Crea una nueva reserva"
+	@echo "  Q2-GetBookingById - Escenario Q2: Devuelve una reserva especifica"
+	@echo "  Q3-UpdateBooking  - Escenario Q3: Actualiza una reserva existente"
+	@echo "  Q4-DeleteBooking  - Escenario Q4: Elimina una reserva existente"
+	@echo "  QA-week2          - Ejecutar todos los escenarios Q1-Q4 de la semana 2"
+	@echo ""
+	@echo "Pruebas Legacy:"
+	@echo "  smoke             - Ejecutar pruebas de humo"
 
 perm:
 	@chmod +x $(RUN_SCRIPT) $(STOP_SCRIPT) $(HEALTH_SCRIPT)
@@ -46,3 +56,24 @@ logs:
 	@{ command -v docker-compose >/dev/null 2>&1 && docker-compose logs -f --tail=200; } || \
 	 { command -v docker >/dev/null 2>&1 && docker compose logs -f --tail=200; } || \
 	 { echo "Docker Compose no se encuentra disponible."; exit 1; }
+
+smoke:
+	./scripts/smoke.sh
+
+Q1-CreateBooking:
+	./scripts/createBooking.sh
+
+Q2-GetBookingById:
+	./scripts/getBookingById.sh
+
+Q3-UpdateBooking:
+	./scripts/updateBooking.sh
+
+Q4-DeleteBooking:
+	./scripts/deleteBooking.sh
+
+QA-week2: Q1-CreateBooking Q2-GetBookingById Q3-UpdateBooking Q4-DeleteBooking
+	@echo ""
+	@echo "================================"
+	@echo "✅ Todos los escenarios Q1-Q4 completados"
+	@echo "================================"

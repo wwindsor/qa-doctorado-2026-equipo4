@@ -1,0 +1,36 @@
+✓ PASSED: autenticación  exitosa de token
+================================================
+  Restful-Booker Smoke Tests
+  URL básica: http://localhost:3001
+  Marca de Tiempo: 2026-01-21 12:22:51
+  Archivo de Registro: evidence/week2/smoke 20260121_122251.log
+================================================
+
+----------Test 1: CreateBooking---------------
+✓ PASSED: CreateBooking creó la reserva exitosamente
+
+----------Test 2: GetBookingIds---------------
+✓ PASSED: GetBookingIds realizado exitosamente
+
+--------------Test 3: GetBooking por Id---------------------
+✓ PASSED: GetBooking devolvió el ID de reserva exitosamente
+
+----------------Test 4: UpdateBooking-------------------
+✓ PASSED: UpdateBooking actualizó exitosamente
+
+-----------------Test 5: PartialUpdateBooking------------------
+✓ PASSED: PartialUpdateBooking actualizó exitosamente
+
+-----------------Test 6: DeleteBooking------------------
+✓ PASSED: DeleteBooking eliminó exitosamente la reserva
+
+================================================
+  Resumen de Resultados de Pruebas
+================================================
+Pasaron: 7
+Fallaron: 0
+Total: 7
+
+Todos los tests pasaron!
+
+La evidencia se guardó en: evidence/week2/smoke 20260121_122251.log
