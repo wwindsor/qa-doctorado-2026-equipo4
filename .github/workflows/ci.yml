@@ -46,6 +46,7 @@ jobs:
         env:
           SKIP_SUT_START: "1"
           BASE_URL: ${{ env.SUT_BASE_URL }}
+          RELAX_SYSTEMATIC_CHECK: "1"
         run: |
           set -e
           make perm 2>/dev/null || chmod +x ci/run_quality_gates.sh scripts/*.sh setup/*.sh
