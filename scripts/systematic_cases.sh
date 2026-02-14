@@ -160,13 +160,10 @@ oracle_types_correct() {
 prepare_test_data() {
     log "${BLUE}=== Preparación: Creación de bookings de prueba ===${NC}"
     
-    # Create 10+ test bookings
+    # Create 10+ test bookings (fechas YYYY-MM-DD válidas)
     for i in {1..10}; do
-        local checkin="2025-01-0$((i)):00"
-        [ $i -lt 9 ] || checkin="2025-01-1$((i-8)):00"
-        
-        local checkout="2025-02-0$((i)):00"
-        [ $i -lt 9 ] || checkout="2025-02-1$((i-8)):00"
+        local checkin=$(printf "2025-01-%02d" "$i")
+        local checkout=$(printf "2025-02-%02d" "$i")
         
         local payload=$(cat <<EOF
 {

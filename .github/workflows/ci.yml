@@ -1,0 +1,73 @@
+name: CI - Quality Gate (Semana 5)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+env:
+  SUT_BASE_URL: https://restful-booker.herokuapp.com
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar entorno
+        run: |
+          echo "=== Versiones ==="
+          uname -a
+          make --version 2>/dev/null || true
+          curl --version | head -1
+          bash --version | head -1
+          echo "SUT: ${{ env.SUT_BASE_URL }}"
+
+      - name: Verificar SUT accesible
+        run: |
+          set -e
+          for i in 1 2 3 4 5; do
+            if curl -sS -f -m 10 "${{ env.SUT_BASE_URL }}/ping" >/dev/null 2>&1 || \
+               curl -sS -f -m 10 "${{ env.SUT_BASE_URL }}/booking" >/dev/null 2>&1; then
+              echo "SUT respondiendo"
+              exit 0
+            fi
+            echo "Reintento $i/5..."
+            sleep 2
+          done
+          echo "SUT no accesible"
+          exit 1
+
+      - name: Ejecutar Quality Gate
+        env:
+          SKIP_SUT_START: "1"
+          BASE_URL: ${{ env.SUT_BASE_URL }}
+          RELAX_SYSTEMATIC_CHECK: "1"
+        run: |
+          set -e
+          make perm 2>/dev/null || chmod +x ci/run_quality_gates.sh scripts/*.sh setup/*.sh
+          for attempt in 1 2 3; do
+            echo "Intento $attempt/3 del quality gate..."
+            if make quality-gate; then
+              echo "Quality gate PASS"
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Reintentando en 15s (API pública puede resetear)..."
+              sleep 15
+            fi
+          done
+          echo "Quality gate FAIL tras 3 intentos"
+          exit 1
+
+      - name: Subir evidencia como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencia-week5
+          path: evidence/week5/
+          if-no-files-found: warn

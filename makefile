@@ -10,7 +10,7 @@ RUN_SCRIPT := ./run_sut.sh
 STOP_SCRIPT := ./stop_sut.sh
 HEALTH_SCRIPT := ./healthcheck_sut.sh
 
-.PHONY: help up down health restart status logs perm
+.PHONY: help up down health restart status logs perm quality-gate
 
 help:
 	@echo "Objetivos disponibles:"
@@ -29,11 +29,15 @@ help:
 	@echo "  Q4-DeleteBooking  - Escenario Q4: Elimina una reserva existente"
 	@echo "  QA-week2          - Ejecutar todos los escenarios Q1-Q4 de la semana 2"
 	@echo ""
+	@echo "Quality Gate (Semana 5):"
+	@echo "  quality-gate      - Ejecutar quality gate (checks + evidencia en evidence/week5/)"
+	@echo ""
 	@echo "Pruebas Legacy:"
 	@echo "  smoke             - Ejecutar pruebas de humo"
 
 perm:
 	@chmod +x $(RUN_SCRIPT) $(STOP_SCRIPT) $(HEALTH_SCRIPT)
+	@chmod +x ./ci/run_quality_gates.sh
 	@echo "Permisos de ejecucion aplicados."
 
 up:
@@ -77,3 +81,6 @@ QA-week2: Q1-CreateBooking Q2-GetBookingById Q3-UpdateBooking Q4-DeleteBooking
 	@echo "================================"
 	@echo "✅ Todos los escenarios Q1-Q4 completados"
 	@echo "================================"
+
+quality-gate:
+	./ci/run_quality_gates.sh
