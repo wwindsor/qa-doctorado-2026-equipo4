@@ -38,16 +38,37 @@ jobs:
         run: |
           set -e
           SUT_URL="${SUT_BASE_URL:-http://localhost:3001}"
+          SUT_OK=0
           for i in $(seq 1 30); do
             if curl -sS -f -m 5 "${SUT_URL}/ping" >/dev/null 2>&1 || curl -sS -f -m 5 "${SUT_URL}/booking" >/dev/null 2>&1; then
               echo "SUT respondiendo en intento $i"
-              exit 0
+              SUT_OK=1
+              break
             fi
             echo "Esperando SUT... intento $i/30"
             sleep 2
           done
-          echo "SUT no respondió a tiempo"
-          exit 1
+          if [ "$SUT_OK" = "0" ]; then echo "SUT no respondió"; exit 1; fi
+          echo "Esperando 10s para que MongoDB esté listo..."
+          sleep 10
+
+      - name: Warmup SUT (crear bookings)
+        run: |
+          set -e
+          SUT_URL="${SUT_BASE_URL:-http://localhost:3001}"
+          for i in $(seq 1 20); do
+            RES=$(curl -sS -w "\n%{http_code}" -X POST "${SUT_URL}/booking" \
+              -H "Content-Type: application/json" \
+              -d '{"firstname":"CI","lastname":"Warmup","totalprice":100,"depositpaid":true,"bookingdates":{"checkin":"2017-12-31","checkout":"2018-12-31"}}' 2>/dev/null || echo -e "\n000")
+            CODE=$(echo "$RES" | tail -n1)
+            if [ "$CODE" = "200" ] || [ "$CODE" = "201" ]; then
+              echo "Warmup OK: POST /booking retornó $CODE"
+              exit 0
+            fi
+            echo "Warmup intento $i/20: HTTP $CODE"
+            sleep 2
+          done
+          echo "WARN: POST /booking no respondió 200/201; el gate puede fallar (continuando)"
 
       - name: Ejecutar Quality Gate
         env:
