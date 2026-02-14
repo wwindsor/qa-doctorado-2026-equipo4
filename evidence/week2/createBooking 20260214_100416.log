@@ -1,0 +1,19 @@
+================================================
+  Restful-Booker CreateBooking Test
+  URL básica: http://localhost:3001
+  Marca de Tiempo: 2026-02-14 10:04:16
+  Archivo de Registro: evidence/week2/createBooking 20260214_100416.log
+================================================
+
+----------Inicia a jecutar el test: CreateBooking---------------
+✗ FAILED: CreateBooking falló (HTTP 500)
+
+================================================
+  Resumen de Pruebas
+================================================
+Pasaron: 0
+Fallaron: 1
+
+El test falló!
+
+La evidencia se guardó en: evidence/week2/createBooking 20260214_100416.log

@@ -1,0 +1,76 @@
+name: CI - Quality Gate (Semana 5)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar entorno
+        run: |
+          echo "=== Versiones ==="
+          uname -a
+          make --version 2>/dev/null || true
+          docker --version
+          docker compose version 2>/dev/null || docker-compose --version 2>/dev/null || true
+          curl --version | head -1
+          bash --version | head -1
+
+      - name: Clonar y levantar SUT (Restful Booker)
+        run: |
+          set -e
+          git clone --depth 1 https://github.com/mwinteringham/restful-booker.git /tmp/restful-booker
+          cd /tmp/restful-booker
+          docker compose build 2>/dev/null || docker-compose build
+          docker compose up -d 2>/dev/null || docker-compose up -d
+          echo "SUT iniciado en http://localhost:3001"
+
+      - name: Esperar SUT listo
+        run: |
+          set -e
+          SUT_URL="${SUT_BASE_URL:-http://localhost:3001}"
+          for i in $(seq 1 30); do
+            if curl -sS -f -m 5 "${SUT_URL}/ping" >/dev/null 2>&1 || curl -sS -f -m 5 "${SUT_URL}/booking" >/dev/null 2>&1; then
+              echo "SUT respondiendo en intento $i"
+              exit 0
+            fi
+            echo "Esperando SUT... intento $i/30"
+            sleep 2
+          done
+          echo "SUT no respondió a tiempo"
+          exit 1
+
+      - name: Ejecutar Quality Gate
+        env:
+          SKIP_SUT_START: "1"
+          SUT_HOST: localhost
+          SUT_PORT: "3001"
+          BASE_URL: http://localhost:3001
+        run: |
+          set -e
+          make perm 2>/dev/null || chmod +x ci/run_quality_gates.sh scripts/*.sh setup/*.sh
+          make quality-gate
+
+      - name: Subir evidencia como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencia-week5
+          path: evidence/week5/
+          if-no-files-found: warn
+
+      - name: Limpiar SUT
+        if: always()
+        run: |
+          set +e
+          cd /tmp/restful-booker 2>/dev/null && (docker compose down 2>/dev/null || docker-compose down 2>/dev/null) || true
+          docker ps -a -q --filter "name=restful" | xargs -r docker rm -f 2>/dev/null || true
